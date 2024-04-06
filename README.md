@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/EddieTheEd/CEDICT-Search/main/stardict.svg)
+
 # CEDICT-Search
 Chinese to English/English to Chinese dictionary.
 
