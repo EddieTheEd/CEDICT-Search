@@ -6,6 +6,9 @@ from PyQt5.QtGui import QIcon, QKeySequence
 import PyQt5.QtCore as QtCore
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 import subprocess
+from googletrans import Translator
+translator = Translator()
+import pypinyin
 
 PinyinToneMark = {
     0: "aoeiuv\u00fc",
@@ -179,7 +182,7 @@ class ChineseTextSearch(QWidget):
             if matching_lines:
                 answer = modify("\n".join(matching_lines))
             else:
-                answer = "No matching results found." # TODO: Use Google Translate instead
+                answer = chinese_text + " " + ' '.join([word[0] for word in pypinyin.pinyin(chinese_text)]) +  " /" + translator.translate(chinese_text).text + "/(GT)"
             self.result_label.setText(answer)
         except Exception as e:
             self.result_label.setText(f"An error occurred: {e}")
