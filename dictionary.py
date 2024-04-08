@@ -124,17 +124,18 @@ class ChineseTextSearch(QWidget):
         self.shortcuts_button = QPushButton("Shortcuts")
         self.shortcuts_button.clicked.connect(self.shortcuts)
         self.shortcuts_button.setFont(font)
+
+        self.tips_button = QPushButton("Tips")
+        self.tips_button.clicked.connect(self.tips)
+        self.tips_button.setFont(font)
         
-        # Create QWebEngineView instance
         self.web_view = QWebEngineView()
         self.web_view.setUrl(QtCore.QUrl("https://www.writeinput.com/?lang=en"))
 
-        # Wrap QWebEngineView in a QWidget
         web_view_widget = QWidget()
         web_view_layout = QVBoxLayout(web_view_widget)
         web_view_layout.addWidget(self.web_view)
         
-        # Adjust layout to include QWebEngineView
         main_layout = QHBoxLayout()
         
         left_layout = QVBoxLayout()
@@ -143,15 +144,16 @@ class ChineseTextSearch(QWidget):
         left_layout.addLayout(self.buttons)
         left_layout.addWidget(scroll_area)
         left_layout.addWidget(self.shortcuts_button)
+        left_layout.addWidget(self.tips_button)
         
         main_layout.addLayout(left_layout)
-        main_layout.addWidget(web_view_widget)  # Add the QWidget containing QWebEngineView to the right
+        main_layout.addWidget(web_view_widget)
         main_layout.setStretchFactor(left_layout,   65)
         main_layout.setStretchFactor(web_view_widget,   35)
         
         self.setLayout(main_layout)
 
-        self.resize(1200, 500)  # Adjust window size to accommodate QWebEngineView
+        self.resize(1200, 500)
 
         try:
             self.setWindowIcon(QIcon(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'stardict.svg')))
@@ -162,6 +164,8 @@ class ChineseTextSearch(QWidget):
 
         shortcut = QShortcut(QKeySequence("Ctrl+W"), self)
         shortcut.activated.connect(self.close)
+        tipshortcut = QShortcut(QKeySequence("Ctrl+O"), self)
+        tipshortcut.activated.connect(self.tips)
         
     
     
@@ -195,7 +199,17 @@ class ChineseTextSearch(QWidget):
             QMessageBox.warning(self, "Empty Result", "No result to copy.")
 
     def shortcuts(self):
-        QMessageBox.information(self, "Shortcuts", "Ctrl-W - Close\nEnter - Search")
+        QMessageBox.information(self, "Shortcuts", "Ctrl-W - Close\nCtrl-O - Open tips\nEnter - Search")
+
+    def tips(self):
+        tipsstring = "<b>CEDICT entries are formatted as such:</b><br>Trad. Simp. [pin1 yin1] /gloss; gloss; .../gloss; gloss; .../<br><br>Hence, to match:<br><br><b>Pinyin - </b> Write 'pin1 yin1', e.g. 'gu4 gong1'<br><b>English - </b> Write plain English, e.g. 'hello'<br><b>Specific definition - </b> Write '/definition', e.g. /centenarian<br><b>Simp. Chinese - </b> Write '字符 ' (emphasis on the space at the end), e.g. '海南 '"
+        msg_box = QMessageBox()
+        msg_box.setTextFormat(QtCore.Qt.RichText)
+        msg_box.setText(tipsstring)
+        font = msg_box.font()
+        font.setPointSize(18)
+        msg_box.setFont(font)
+        msg_box.exec_()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
