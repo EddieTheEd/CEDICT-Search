@@ -13,5 +13,7 @@ Chinese to English/English to Chinese dictionary.
 ```
 pip install PyQt5
 pip install PyQtWebEngine
+pip install googletrans
+pip install pypinyin
 python dictionary.py
 ```

@@ -1,0 +1,4 @@
+googletrans_py==4.0.0
+pypinyin==0.50.0
+PyQt5==5.15.10
+PyQt5_sip==12.13.0
