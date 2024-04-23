@@ -21,6 +21,9 @@ PinyinToneMark = {
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cedict_ts.u8'), "r", encoding="utf-8") as file:
     cedict = file.readlines()
 
+def detect_language(text):
+    return translator.detect(text).lang
+
 def decode_pinyin(total):
     final = []
     for pinyin in total.split(" "):
@@ -186,7 +189,15 @@ class ChineseTextSearch(QWidget):
             if matching_lines:
                 answer = modify("\n".join(matching_lines))
             else:
-                answer = chinese_text + " " + ' '.join([word[0] for word in pypinyin.pinyin(chinese_text)]) +  " /" + translator.translate(chinese_text).text + "/(GT)"
+                language = detect_language(chinese_text)
+                if language == 'en':
+                    # Translate English to Chinese
+                    translated_text = translator.translate(chinese_text, src='en', dest='zh-cn').text
+                    answer = translated_text + " " + ' '.join([word[0] for word in pypinyin.pinyin(translated_text)]) +  " /" + translator.translate(translated_text).text + "/(GT)"
+                else:
+                    # Translate Chinese to English
+                    translated_text = translator.translate(chinese_text, src='zh-cn', dest='en').text
+                    answer = chinese_text + " " + ' '.join([word[0] for word in pypinyin.pinyin(chinese_text)]) +  " /" + translator.translate(translated_text).text + "/(GT)"
             self.result_label.setText(answer)
         except Exception as e:
             self.result_label.setText(f"An error occurred: {e}")
