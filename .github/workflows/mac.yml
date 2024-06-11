@@ -3,7 +3,7 @@ name: Create macOS executable
 on: 
   push:
     branches:
-      - main  # Adjust this to your main development branch if different
+      - main
 
 jobs:
   build:
@@ -26,6 +26,11 @@ jobs:
     - name: Run PyInstaller
       run: pyinstaller dictionary.spec
     
+    - name: Install Git LFS
+      run: |
+        brew install git-lfs
+        git lfs install
+    
     - name: Set up Git
       run: |
         git config --global user.name "github-actions[bot]"
@@ -35,6 +40,11 @@ jobs:
       run: |
         git fetch
         git checkout -B mac
+    
+    - name: Track dist directory with Git LFS
+      run: |
+        git lfs track "dist/**"
+        git add .gitattributes
     
     - name: Add and commit 'dist' directory
       run: |
