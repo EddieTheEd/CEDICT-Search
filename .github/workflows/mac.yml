@@ -38,7 +38,7 @@ jobs:
     
     - name: Add and commit 'dist' directory
       run: |
-        git add dist
+        git add dist -f
         git commit -m "Add macOS executable"
     
     - name: Push changes to 'mac' branch
